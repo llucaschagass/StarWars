@@ -1,9 +1,11 @@
 const express = require('express')
 const mongoose = require('mongoose')
 const app = express()
-app.arguments(express.json())
-const port = 3000
-mongoose.connect('Crie um banco de dados no MongoDB Atlas e cole aqui a url')
+app.use(express.json())
+const port = 3333
+mongoose.connect('mongodb+srv://<username>:<password>@<cluster>/<database>?retryWrites=true&w=majority')
+const swaggerUi = require('swagger-ui-express');
+const swaggerDoc = require('./swagger.js'); 
 
 const Film = mongoose.model('Film', {
     tittle: String,
@@ -11,6 +13,8 @@ const Film = mongoose.model('Film', {
     imageurl: String,
     trailerurl: String
 });
+
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDoc));
 
 app.get("/", async (req, res) => {
     const films = await Film.find()
